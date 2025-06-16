@@ -1,28 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Account Number</title>
-    <link rel="stylesheet" href="acnumber.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Account Number</title>
+  <link rel="stylesheet" href="acnumber.css">
 </head>
 <body>
-    <div class="account-info">
-        <h2>Your Account Number to Receive Money</h2>
-        <p><strong>Account Number:</strong> <span id="accountNumberDisplay"></span></p>
-        <h3>Share this account number with others to receive money:</h3>
-    </div>
+  <div class="account-info">
+    <h2>Your Account Number to Receive Money</h2>
+    <p><strong>Account Number:</strong> <span id="accountNumberDisplay"></span></p>
+    <h3>Share this account number with others to receive money:</h3>
+  </div>
 
-    <script>
-        // Function to generate a random 14-digit account number with LU prefix
-        function generateAccountNumber() {
-            // Generate a 14-digit account number starting with 'LU'
-            const accountNumber = 'LU' + Math.floor(Math.random() * 10000000000000).toString().padStart(14, '0');
-            return accountNumber;
-        }
+  <script>
+    // Check if the user already has an account number
+    let userProfile = JSON.parse(localStorage.getItem("userProfile")) || {};
 
-        // Display the account number when the page loads
-        document.getElementById('accountNumberDisplay').textContent = generateAccountNumber();
-    </script>
+    if (!userProfile.accountNumber) {
+      // Generate a 14-digit account number only once
+      const generated = Math.floor(Math.random() * 10000000000000).toString().padStart(14, '0');
+      userProfile.accountNumber = generated;
+      localStorage.setItem("userProfile", JSON.stringify(userProfile));
+    }
+
+    // Display the stored account number
+    document.getElementById("accountNumberDisplay").textContent = userProfile.accountNumber;
+  </script>
 </body>
 </html>
