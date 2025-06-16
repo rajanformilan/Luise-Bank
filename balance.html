@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bank Balance - FD & SIP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f1f5f9;
+      color: #333;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+      padding: 24px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #1877f2;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .info {
+      margin: 8px 0;
+      font-size: 15px;
+    }
+
+    .info span {
+      font-weight: 600;
+    }
+
+    .balance {
+      font-size: 28px;
+      font-weight: 600;
+      color: #10b981;
+      text-align: center;
+      margin: 16px 0;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-top: 20px;
+      margin-bottom: 6px;
+    }
+
+    select, input {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      background-color: #1877f2;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #145dc1;
+    }
+
+    .section {
+      margin-top: 24px;
+    }
+
+    .section h3 {
+      font-size: 18px;
+      color: #444;
+      margin-bottom: 10px;
+    }
+
+    .icon-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 13px;
+      color: #888;
+      margin-top: 24px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🏦 Bank Balance (FD & SIP)</h2>
+
+  <div class="info"><strong>Name:</strong> <span id="username">-</span></div>
+  <div class="info"><strong>Email:</strong> <span id="email">-</span></div>
+  <div class="info"><strong>Plan:</strong> <span id="planDisplay">-</span></div>
+  <div class="balance">Rs <span id="balance">0</span></div>
+
+  <label>Select Interest Plan</label>
+  <select id="plan">
+    <option value="2-5">2% - 5% Monthly</option>
+    <option value="6-9">6% - 9% Monthly</option>
+    <option value="10-12">10% - 12% Monthly</option>
+  </select>
+
+  <div class="section">
+    <div class="icon-heading">
+      <h3>🔒 Fixed Deposit</h3>
+    </div>
+    <input type="number" id="fdAmount" placeholder="Enter FD amount (Rs)" />
+    <button onclick="startFD()">Start Fixed Deposit</button>
+  </div>
+
+  <div class="section">
+    <div class="icon-heading">
+      <h3>📆 Start SIP</h3>
+    </div>
+    <input type="number" id="sipAmount" placeholder="Enter Monthly SIP (Rs)" />
+    <button onclick="startSIP()">Start SIP</button>
+  </div>
+
+  <div class="footer-note">Your interest and SIP contributions update every month automatically.</div>
+</div>
+
+<script>
+  let profile = JSON.parse(localStorage.getItem("userProfile")) || {
+    name: "User",
+    email: "user@example.com",
+    plan: "2-5",
+    balance: 0
+  };
+
+  let sipAmount = parseFloat(localStorage.getItem("sipAmount")) || 0;
+  let lastMonth = localStorage.getItem("lastMonth");
+  let selectedPlan = profile.plan || "2-5";
+  let balance = parseFloat(profile.balance) || 0;
+
+  const usernameDisplay = document.getElementById("username");
+  const emailDisplay = document.getElementById("email");
+  const balanceDisplay = document.getElementById("balance");
+  const planDisplay = document.getElementById("planDisplay");
+  const planSelect = document.getElementById("plan");
+
+  usernameDisplay.textContent = profile.name;
+  emailDisplay.textContent = profile.email;
+  planSelect.value = selectedPlan;
+  planDisplay.textContent = selectedPlan;
+
+  function updateBalanceDisplay() {
+    balanceDisplay.textContent = balance.toFixed(2);
+    planDisplay.textContent = selectedPlan;
+    profile.balance = balance;
+    profile.plan = selectedPlan;
+    localStorage.setItem("userProfile", JSON.stringify(profile));
+  }
+
+  function getRandomMonthlyRate(plan) {
+    let min = 2, max = 5;
+    if (plan === "6-9") { min = 6; max = 9; }
+    else if (plan === "10-12") { min = 10; max = 12; }
+    return (Math.random() * (max - min) + min) / 100;
+  }
+
+  function applyMonthlyUpdates() {
+    const now = new Date();
+    const currentMonth = `${now.getFullYear()}-${now.getMonth()}`;
+    if (lastMonth === currentMonth) return;
+
+    const rate = getRandomMonthlyRate(selectedPlan);
+    const interest = balance * rate;
+    balance += interest;
+
+    if (sipAmount > 0) {
+      balance += sipAmount;
+    }
+
+    localStorage.setItem("lastMonth", currentMonth);
+    updateBalanceDisplay();
+  }
+
+  function startFD() {
+    const fdAmount = parseFloat(document.getElementById("fdAmount").value);
+    if (!fdAmount || fdAmount <= 0) return alert("Enter valid FD amount");
+    balance += fdAmount;
+    updateBalanceDisplay();
+    alert("FD Started. Amount added to your balance.");
+  }
+
+  function startSIP() {
+    const amount = parseFloat(document.getElementById("sipAmount").value);
+    if (!amount || amount <= 0) return alert("Enter valid SIP amount");
+    sipAmount = amount;
+    localStorage.setItem("sipAmount", sipAmount);
+    alert("SIP Started. Monthly Rs " + amount + " will be added automatically.");
+  }
+
+  planSelect.addEventListener("change", () => {
+    selectedPlan = planSelect.value;
+    profile.plan = selectedPlan;
+    localStorage.setItem("userProfile", JSON.stringify(profile));
+    planDisplay.textContent = selectedPlan;
+  });
+
+  updateBalanceDisplay();
+  applyMonthlyUpdates();
+</script>
+
+</body>
+</html>

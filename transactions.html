@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .no-transactions {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+    <h1>Transaction History</h1>
+
+    <table id="transactionTable">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Recipient Bank</th>
+                <th>Recipient Account</th>
+                <th>Amount (Rs)</th>
+            </tr>
+        </thead>
+        <tbody id="transactionsBody">
+            <!-- Transactions will be loaded dynamically here -->
+        </tbody>
+    </table>
+
+    <script>
+        // Load transactions from localStorage
+        const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+        const transactionsBody = document.getElementById('transactionsBody');
+
+        function loadTransactions() {
+            transactionsBody.innerHTML = ''; // Clear existing rows
+
+            if (transactions.length === 0) {
+                // Display no transactions message if the list is empty
+                const noTransactionsMessage = document.createElement('tr');
+                noTransactionsMessage.innerHTML = `<td colspan="4" class="no-transactions">No transactions yet.</td>`;
+                transactionsBody.appendChild(noTransactionsMessage);
+            } else {
+                // Populate transactions
+                transactions.forEach(transaction => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${transaction.date}</td>
+                        <td>${transaction.recipientBank}</td>
+                        <td>${transaction.recipientAccount}</td>
+                        <td>${transaction.amount.toFixed(2)}</td>
+                    `;
+                    transactionsBody.appendChild(row);
+                });
+            }
+        }
+
+        // Load the transactions when the page loads
+        loadTransactions();
+    </script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Panel - Balance Control</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #1877f2;
+    }
+    select, input, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #1877f2;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #0f5bcc;
+    }
+    .balance-info {
+      margin: 15px 0;
+      font-size: 18px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Admin Dashboard</h2>
+
+  <label for="userSelect">Select User (by Email)</label>
+  <select id="userSelect" onchange="loadUserBalance()">
+    <option value="">-- Select a user --</option>
+  </select>
+
+  <div class="balance-info">
+    Current Balance: Rs <span id="currentBalance">0</span>
+  </div>
+
+  <input type="number" id="amount" placeholder="Enter amount" />
+  <button onclick="addBalance()">➕ Add Balance</button>
+  <button onclick="deductBalance()">➖ Deduct Balance</button>
+</div>
+
+<script>
+  // Load all users stored in localStorage
+  const userSelect = document.getElementById("userSelect");
+  const currentBalanceSpan = document.getElementById("currentBalance");
+  const usersKey = "usersList";
+
+  // Utility: Load all users from localStorage
+  function getUsers() {
+    return JSON.parse(localStorage.getItem(usersKey)) || [];
+  }
+
+  // Utility: Save updated user list
+  function saveUsers(users) {
+    localStorage.setItem(usersKey, JSON.stringify(users));
+  }
+
+  // Populate dropdown
+  function populateUserDropdown() {
+    const users = getUsers();
+    users.forEach(user => {
+      const option = document.createElement("option");
+      option.value = user.email;
+      option.textContent = `${user.name} (${user.email})`;
+      userSelect.appendChild(option);
+    });
+  }
+
+  // Load selected user's balance
+  function loadUserBalance() {
+    const email = userSelect.value;
+    if (!email) return;
+    const users = getUsers();
+    const user = users.find(u => u.email === email);
+    currentBalanceSpan.textContent = user.balance.toFixed(2);
+  }
+
+  // Add balance
+  function addBalance() {
+    updateBalance(true);
+  }
+
+  // Deduct balance
+  function deductBalance() {
+    updateBalance(false);
+  }
+
+  function updateBalance(isAdd) {
+    const amount = parseFloat(document.getElementById("amount").value);
+    const email = userSelect.value;
+    if (!email || isNaN(amount) || amount <= 0) {
+      alert("Enter valid user and amount.");
+      return;
+    }
+
+    const users = getUsers();
+    const user = users.find(u => u.email === email);
+
+    if (!isAdd && user.balance < amount) {
+      alert("Not enough balance to deduct.");
+      return;
+    }
+
+    user.balance = isAdd ? user.balance + amount : user.balance - amount;
+    saveUsers(users);
+    currentBalanceSpan.textContent = user.balance.toFixed(2);
+    alert(`Balance ${isAdd ? "added" : "deducted"} successfully.`);
+  }
+
+  // Initial load
+  populateUserDropdown();
+</script>
+
+</body>
+</html>

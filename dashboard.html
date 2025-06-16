@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="dash.css">
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2>Luise Bank</h2>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="acnumber.html">Account Number</a></li>
+                <li><a href="balance.html">Balance</a></li>
+                <li><a href="transfer.html">Transfer</a></li>
+                <li><a href="transactions.html">Transactions</a></li>
+                <li><a href="authentication.html">Logout</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <h1>Welcome to Your Dashboard</h1>
+            </header>
+
+            <!-- Overview Section -->
+            <section class="overview">
+                <div class="card">
+                    <h3>Balance</h3>
+                    <p>Rs. <span id="dashboardBalance"></span></p>
+                </div>
+                <div class="card">
+                    <h3>Transactions</h3>
+                    <p>25 this month</p>
+                </div>
+                <div class="card">
+                    <h3>Notifications</h3>
+                    <p>3 unread messages</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // Load balance from localStorage
+        const balance = localStorage.getItem('accountBalance') || 100000;
+        document.getElementById('dashboardBalance').textContent = parseFloat(balance).toFixed(2);
+    </script>
+</body>
+</html>

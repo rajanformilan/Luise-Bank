@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      background-color: #f4f4f9;
+    }
+    .container {
+      margin: 20px auto;
+      max-width: 600px;
+      padding: 20px;
+      background: #ffffff;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+    img {
+      border-radius: 50%;
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      margin: 20px auto 10px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      margin-top: 20px;
+      font-size: 16px;
+      color: #ffffff;
+      background-color: #007bff;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+    .btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+    
+  <div class="container">
+    <!-- Profile Picture at the Top -->
+    <img id="pictureDisplay" src="https://via.placeholder.com/150" alt="Profile Picture">
+    
+    <h1>Your Profile</h1>
+    <p><strong>Name:</strong> <span id="nameDisplay">Loading...</span></p>
+    <p><strong>Email:</strong> <span id="emailDisplay">Loading...</span></p>
+    <p><strong>Gender:</strong> <span id="genderDisplay">Loading...</span></p>
+    
+    <!-- Back Button -->
+    <a href="dashboard.html" class="btn">Dashboard</a>
+  </div>
+
+  <script>
+    // Load the saved profile from localStorage
+    document.addEventListener('DOMContentLoaded', function() {
+      const profile = JSON.parse(localStorage.getItem('userProfile'));
+      if (profile) {
+        // Display profile details
+        document.getElementById('nameDisplay').textContent = profile.name || "N/A";
+        document.getElementById('emailDisplay').textContent = profile.email || "N/A";
+        document.getElementById('genderDisplay').textContent = profile.gender || "N/A";
+        document.getElementById('pictureDisplay').src = profile.profilePicture || "https://via.placeholder.com/150";
+      } else {
+        // If no profile is found, show a message
+        document.querySelector('.container').innerHTML = `
+          <h2>No Profile Found</h2>
+          <p>Please <a href="authentication.html" class="btn">Create a Profile</a></p>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>
