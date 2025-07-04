@@ -1,150 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transfer Balance</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
-        }
-        #transferSection {
-            text-align: center;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 10px;
-            cursor: pointer;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-        }
-        select, input {
-            margin: 10px 0;
-            padding: 10px;
-            font-size: 16px;
-            width: 90%;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Transfer Balance</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    #transferSection {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    select, input, button {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #message {
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
-    <div id="transferSection">
-        <h2>Transfer Balance</h2>
+  <div id="transferSection">
+    <h2>Transfer Balance</h2>
 
-        <!-- Bank Name -->
-        <label for="bankName">Select Recipient's Bank:</label>
-        <select id="bankName">
-            <option value="" disabled selected>Select a bank</option>
-            <option value="Luise Bank">Luise Bank</option>
-            <option value="Nabil Bank">Nabil Bank</option>
-<option value="Nepal Investment Bank">Nepal Investment Bank</option>
-<option value="Everest Bank">Everest Bank</option>
-<option value="Standard Chartered Bank Nepal">Standard Chartered Bank Nepal</option>
-<option value="Himalayan Bank">Himalayan Bank</option>
-<option value="Bank of Kathmandu and Trust">Bank of Kathmandu and Trust</option>
-<option value="Mega Bank Nepal">Mega Bank Nepal</option>
-<option value="Global IME Bank">Global IME Bank</option>
-<option value="Laxmi Bank">Laxmi Bank</option>
-<option value="Prabhu Bank">Prabhu Bank</option>
-<option value="Nepal SBI Bank">Nepal SBI Bank</option>
-<option value="Rastriya Banijya Bank">Rastriya Banijya Bank</option>
-<option value="Agricultural Development Bank">Agricultural Development Bank</option>
-<option value="Siddhartha Bank">Siddhartha Bank</option>
-<option value="ICICI Bank Nepal">ICICI Bank Nepal</option>
-<option value="Citizens Bank International">Citizens Bank International</option>
-<option value="Sunrise Bank">Sunrise Bank</option>
-<option value="Janata Bank Nepal">Janata Bank Nepal</option>
-<option value="Kumari Bank">Kumari Bank</option>
-<option value="Sanima Bank">Sanima Bank</option>
-<option value="Century Commercial Bank">Century Commercial Bank</option>
-<option value="Machhapuchchhre Bank">Machhapuchchhre Bank</option>
-<option value="Shree Harsha Bank">Shree Harsha Bank</option>
-<option value="Fewa Finance">Fewa Finance</option>
-<option value="Himalayan Trust Bank">Himalayan Trust Bank</option>
-<option value="NIC Asia Bank">NIC Asia Bank</option>
-<option value="Ace Development Bank">Ace Development Bank</option>
-<option value="Steady Finance">Steady Finance</option>
-<option value="Gurkha Bank">Gurkha Bank</option>
+    <label for="bankName">Select Recipient's Bank:</label>
+    <select id="bankName">
+      <option value="" disabled selected>Select a bank</option>
+      <option value="NIC Asia Bank">NIC Asia Bank</option>
+      <option value="Nabil Bank">Nabil Bank</option>
+      <option value="Everest Bank">Everest Bank</option>
+  <option value="Agricultural Development Bank">Agricultural Development Bank</option>
+  <option value="Bank of Kathmandu">Bank of Kathmandu</option>
+  <option value="Century Commercial Bank">Century Commercial Bank</option>
+  <option value="Citizens Bank International">Citizens Bank International</option>
+  <option value="Civil Bank">Civil Bank</option>
+  <option value="Everest Bank">Everest Bank</option>
+  <option value="Global IME Bank">Global IME Bank</option>
+  <option value="Himalayan Bank">Himalayan Bank</option>
+  <option value="Kumari Bank">Kumari Bank</option>
+  <option value="Laxmi Sunrise Bank">Laxmi Sunrise Bank</option>
+  <option value="Machhapuchchhre Bank">Machhapuchchhre Bank</option>
+  <option value="Mega Bank Nepal">Mega Bank Nepal</option>
+  <option value="Nepal Bank Limited">Nepal Bank Limited</option>
+  <option value="Nepal Investment Mega Bank">Nepal Investment Mega Bank</option>
+  <option value="Nepal SBI Bank">Nepal SBI Bank</option>
+  <option value="Prabhu Bank">Prabhu Bank</option>
+  <option value="Prime Commercial Bank">Prime Commercial Bank</option>
+  <option value="Rastriya Banijya Bank">Rastriya Banijya Bank</option>
+  <option value="Sanima Bank">Sanima Bank</option>
+  <option value="Siddhartha Bank">Siddhartha Bank</option>
+      <!-- Add more as needed -->
+    </select><br/>
 
-        </select>
-        <br>
+    <label for="recipientAccount">Recipient Account:</label>
+    <input type="text" id="recipientAccount" placeholder="Enter account number" /><br/>
 
-        <!-- Recipient Account -->
-        <label for="recipientAccount">Recipient Account:</label>
-        <input type="text" id="recipientAccount" placeholder="Enter account number" required>
-        <br>
+    <label for="amount">Amount (Rs):</label>
+    <input type="number" id="amount" placeholder="Enter amount" min="1"/><br/>
 
-        <!-- Amount -->
-        <label for="amount">Amount (Rs):</label>
-        <input type="number" id="amount" min="1" required>
-        <br>
+    <button id="transferButton">Transfer</button>
+    <p id="message"></p>
+  </div>
 
-        <!-- Transfer Button -->
-        <button id="transferButton">Transfer</button>
-        <p id="message"></p>
-    </div>
+  <script>
+    document.getElementById('transferButton').addEventListener('click', () => {
+      const bankName = document.getElementById('bankName').value;
+      const recipient = document.getElementById('recipientAccount').value.trim();
+      const amount = parseFloat(document.getElementById('amount').value);
+      const message = document.getElementById('message');
 
-    <script>
-        // Get current balance
-        let balance = localStorage.getItem('accountBalance') || 100000;
-        balance = parseFloat(balance);
+      const sender = JSON.parse(localStorage.getItem('userProfile')) || {};
+      const allUsers = JSON.parse(localStorage.getItem('allUsers')) || [];
 
-        // Handle transfer
-        document.getElementById('transferButton').addEventListener('click', () => {
-            const bankName = document.getElementById('bankName').value;
-            const amount = parseFloat(document.getElementById('amount').value);
-            const recipient = document.getElementById('recipientAccount').value.trim();
-            const message = document.getElementById('message');
+      if (!bankName || !recipient || isNaN(amount) || amount <= 0) {
+        message.textContent = "Please fill all fields correctly.";
+        message.style.color = 'red';
+        return;
+      }
 
-            // Validation
-            if (!bankName) {
-                message.textContent = "Please select a bank.";
-                message.style.color = 'red';
-                return;
-            }
+      if (!sender.balance || sender.balance < amount) {
+        message.textContent = "Insufficient balance.";
+        message.style.color = 'red';
+        return;
+      }
 
-            if (recipient === '') {
-                message.textContent = "Please enter a recipient account number.";
-                message.style.color = 'red';
-                return;
-            }
+      const recipientUser = allUsers.find(user => user.account === recipient);
+      if (!recipientUser) {
+        message.textContent = "Recipient account not found.";
+        message.style.color = 'red';
+        return;
+      }
 
-            if (isNaN(amount) || amount <= 0 || amount > balance) {
-                message.textContent = "Invalid or insufficient balance.";
-                message.style.color = 'red';
-                return;
-            }
+      // Perform transfer
+      sender.balance -= amount;
+      recipientUser.balance += amount;
 
-            // Deduct balance and save updated balance
-            balance -= amount;
-            localStorage.setItem('accountBalance', balance);
+      // Save changes
+      localStorage.setItem('userProfile', JSON.stringify(sender));
+      localStorage.setItem('allUsers', JSON.stringify(allUsers));
 
-            // Save transaction
-            const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-            transactions.push({ 
-                date: new Date().toLocaleString(), 
-                amount, 
-                recipient, 
-                bankName 
-            });
-            localStorage.setItem('transactions', JSON.stringify(transactions));
+      // Save transaction log
+      const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+      transactions.push({
+        date: new Date().toLocaleString(),
+        amount,
+        recipient,
+        bankName
+      });
+      localStorage.setItem('transactions', JSON.stringify(transactions));
 
-            // Show success message
-            message.textContent = `Transferred Rs. ${amount} to ${recipient} at ${bankName}.`;
-            message.style.color = 'green';
-        });
-    </script>
+      message.textContent = `Transferred Rs. ${amount} to ${recipient} at ${bankName}.`;
+      message.style.color = 'green';
+
+      // Clear inputs
+      document.getElementById('recipientAccount').value = '';
+      document.getElementById('amount').value = '';
+      document.getElementById('bankName').value = '';
+    });
+  </script>
 </body>
 </html>
