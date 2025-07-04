@@ -65,24 +65,32 @@
 </div>
 
 <script>
-  // Load all users stored in localStorage
   const userSelect = document.getElementById("userSelect");
   const currentBalanceSpan = document.getElementById("currentBalance");
   const usersKey = "usersList";
 
-  // Utility: Load all users from localStorage
   function getUsers() {
     return JSON.parse(localStorage.getItem(usersKey)) || [];
   }
 
-  // Utility: Save updated user list
   function saveUsers(users) {
     localStorage.setItem(usersKey, JSON.stringify(users));
   }
 
-  // Populate dropdown
+  function getUniqueUsers(users) {
+    const seen = new Set();
+    return users.filter(user => {
+      if (!seen.has(user.email)) {
+        seen.add(user.email);
+        return true;
+      }
+      return false;
+    });
+  }
+
   function populateUserDropdown() {
-    const users = getUsers();
+    const users = getUniqueUsers(getUsers());
+    userSelect.innerHTML = '<option value="">-- Select a user --</option>';
     users.forEach(user => {
       const option = document.createElement("option");
       option.value = user.email;
@@ -91,7 +99,6 @@
     });
   }
 
-  // Load selected user's balance
   function loadUserBalance() {
     const email = userSelect.value;
     if (!email) return;
@@ -100,21 +107,11 @@
     currentBalanceSpan.textContent = user.balance.toFixed(2);
   }
 
-  // Add balance
-  function addBalance() {
-    updateBalance(true);
-  }
-
-  // Deduct balance
-  function deductBalance() {
-    updateBalance(false);
-  }
-
   function updateBalance(isAdd) {
     const amount = parseFloat(document.getElementById("amount").value);
     const email = userSelect.value;
     if (!email || isNaN(amount) || amount <= 0) {
-      alert("Enter valid user and amount.");
+      alert("Enter a valid user and amount.");
       return;
     }
 
@@ -132,7 +129,14 @@
     alert(`Balance ${isAdd ? "added" : "deducted"} successfully.`);
   }
 
-  // Initial load
+  function addBalance() {
+    updateBalance(true);
+  }
+
+  function deductBalance() {
+    updateBalance(false);
+  }
+
   populateUserDropdown();
 </script>
 
