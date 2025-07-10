@@ -1,32 +1,95 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>QR Scan</title>
-  <script src="https://unpkg.com/html5-qrcode"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>QR Code Scanner</title>
+<style>
+  html, body {
+    margin: 0; 
+    height: 100%;
+    font-family: Arial, sans-serif;
+    background: #f0f0f0;
+  }
+  body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* vertical center */
+    align-items: center;     /* horizontal center */
+    height: 100vh;
+    text-align: center;
+  }
+  #video {
+    width: 100vw;
+    max-width: 400px; /* optional max width */
+    height: 50vh; /* half screen height */
+    object-fit: cover;
+    border-bottom: 2px solid #512da8;
+    border-radius: 12px;
+  }
+  #output {
+    margin: 15px 0;
+    font-size: 18px;
+    color: #512da8;
+    min-height: 24px;
+  }
+  #canvas {
+    display: none;
+  }
+</style>
 </head>
 <body>
-  <h2>Scan QR Code</h2>
-  <div id="reader" style="width: 300px;"></div>
-  <p id="result"></p>
 
-  <script>
-    const resultBox = document.getElementById('result');
-    const qr = new Html5Qrcode("reader");
+<video id="video" autoplay></video>
+<div id="output">Scan a QR code</div>
+<canvas id="canvas"></canvas>
 
-    function success(decodedText, decodedResult) {
-      qr.stop();
-      resultBox.textContent = "Scanned: " + decodedText;
-    }
+<script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+<script>
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
+  const output = document.getElementById('output');
+  const ctx = canvas.getContext('2d');
 
-    Html5Qrcode.getCameras().then(cameras => {
-      if (cameras && cameras.length) {
-        qr.start(cameras[0].id, { fps: 10, qrbox: 250 }, success);
-      } else {
-        resultBox.textContent = "No camera found.";
+  function startScanner() {
+    const constraints = {
+      video: {
+        facingMode: { exact: "environment" }
       }
+    };
+
+    navigator.mediaDevices.getUserMedia(constraints).catch(() => {
+      return navigator.mediaDevices.getUserMedia({ video: true });
+    }).then(stream => {
+      video.srcObject = stream;
+      video.setAttribute("playsinline", true); 
+      video.play();
+      requestAnimationFrame(tick);
     }).catch(err => {
-      resultBox.textContent = "Error: " + err;
+      output.textContent = "Error accessing camera: " + err.message;
     });
-  </script>
+  }
+
+  function tick() {
+    if (video.readyState === video.HAVE_ENOUGH_DATA) {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const code = jsQR(imageData.data, imageData.width, imageData.height, {
+        inversionAttempts: "dontInvert",
+      });
+      if (code) {
+        output.textContent = "QR Code: " + code.data;
+      } else {
+        output.textContent = "Scanning for QR code...";
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+
+  startScanner();
+</script>
+
 </body>
 </html>
