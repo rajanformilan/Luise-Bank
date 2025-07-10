@@ -1,83 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transactions</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .no-transactions {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 18px;
-            color: gray;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Transaction History - Luise Bank</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #512da8;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    th, td {
+      padding: 12px 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #e8eaf6;
+      font-weight: 600;
+    }
+
+    .credit {
+      color: green;
+      font-weight: bold;
+    }
+
+    .debit {
+      color: red;
+      font-weight: bold;
+    }
+
+    .no-transactions {
+      text-align: center;
+      font-size: 16px;
+      color: gray;
+      padding: 20px;
+    }
+  </style>
 </head>
 <body>
-    <h1>Transaction History</h1>
 
-    <table id="transactionTable">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Recipient Bank</th>
-                <th>Recipient Account</th>
-                <th>Amount (Rs)</th>
-            </tr>
-        </thead>
-        <tbody id="transactionsBody">
-            <!-- Transactions will be loaded dynamically here -->
-        </tbody>
-    </table>
+  <h1>Transaction History</h1>
+  <p class="subtitle">Your latest banking transactions are listed below.</p>
 
-    <script>
-        // Load transactions from localStorage
-        const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
-        const transactionsBody = document.getElementById('transactionsBody');
+  <table id="transactionTable">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Type</th>
+        <th>Recipient Bank</th>
+        <th>Recipient Account</th>
+        <th>Amount (Rs)</th>
+      </tr>
+    </thead>
+    <tbody id="transactionsBody">
+      <!-- Transactions will be loaded here -->
+    </tbody>
+  </table>
 
-        function loadTransactions() {
-            transactionsBody.innerHTML = ''; // Clear existing rows
+  <script>
+    const transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+    const transactionsBody = document.getElementById('transactionsBody');
 
-            if (transactions.length === 0) {
-                // Display no transactions message if the list is empty
-                const noTransactionsMessage = document.createElement('tr');
-                noTransactionsMessage.innerHTML = `<td colspan="4" class="no-transactions">No transactions yet.</td>`;
-                transactionsBody.appendChild(noTransactionsMessage);
-            } else {
-                // Populate transactions
-                transactions.forEach(transaction => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${transaction.date}</td>
-                        <td>${transaction.recipientBank}</td>
-                        <td>${transaction.recipientAccount}</td>
-                        <td>${transaction.amount.toFixed(2)}</td>
-                    `;
-                    transactionsBody.appendChild(row);
-                });
-            }
-        }
+    function loadTransactions() {
+      transactionsBody.innerHTML = '';
 
-        // Load the transactions when the page loads
-        loadTransactions();
-    </script>
+      if (transactions.length === 0) {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td colspan="5" class="no-transactions">No transactions yet.</td>`;
+        transactionsBody.appendChild(row);
+      } else {
+        transactions.forEach(tx => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${tx.date || new Date().toLocaleDateString()}</td>
+            <td>${tx.type || 'Transfer'}</td>
+            <td>${tx.recipientBank}</td>
+            <td>${tx.recipientAccount}</td>
+            <td class="${tx.type === 'Credit' ? 'credit' : 'debit'}">
+              ${tx.type === 'Credit' ? '+' : '-'}${parseFloat(tx.amount).toFixed(2)}
+            </td>
+          `;
+          transactionsBody.appendChild(row);
+        });
+      }
+    }
+
+    loadTransactions();
+  </script>
 </body>
 </html>
