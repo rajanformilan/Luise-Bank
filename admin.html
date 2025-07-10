@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin Edit Balance</title>
+  <title>Admin Panel - View User Balances</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -12,91 +12,66 @@
       padding: 20px;
     }
     .container {
-      max-width: 450px;
+      max-width: 400px;
       margin: auto;
       background: white;
       padding: 24px;
       border-radius: 10px;
-      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+      box-shadow: 0 0 12px rgba(0,0,0,0.08);
+      text-align: center;
     }
     h2 {
       color: #1877f2;
       margin-bottom: 20px;
-      text-align: center;
     }
-    label {
-      font-weight: bold;
-      margin-top: 12px;
-      display: block;
-      color: #333;
-    }
-    select, input, button {
+    select {
       width: 100%;
       padding: 12px;
-      margin-top: 8px;
       font-size: 16px;
       border-radius: 8px;
       border: 1px solid #ccc;
+      margin-bottom: 20px;
       box-sizing: border-box;
     }
-    button {
-      margin-top: 16px;
-      background-color: #1877f2;
-      color: white;
-      border: none;
-      cursor: pointer;
+    .info {
+      font-size: 18px;
+      color: #333;
+      margin-bottom: 8px;
+    }
+    .label {
       font-weight: bold;
-      transition: background-color 0.3s ease;
-    }
-    button:hover {
-      background-color: #0f5bcc;
-    }
-    .user-info {
-      margin-top: 15px;
-      font-size: 16px;
-      color: #444;
-      text-align: center;
-    }
-    .balance-display {
-      margin: 10px 0 20px;
-      font-size: 20px;
-      font-weight: bold;
-      color: #1877f2;
-      text-align: center;
+      color: #666;
+      margin-top: 12px;
     }
   </style>
 </head>
 <body>
 
 <div class="container">
-  <h2>🛠️ Admin Edit User Balance</h2>
+  <h2>🔍 Admin View Balance</h2>
 
-  <label for="userSelect">Select User by Email</label>
-  <select id="userSelect" onchange="loadUser()">
-    <option value="">-- Select a user --</option>
+  <select id="userSelect" onchange="showUserDetails()">
+    <option value="">-- Select User by Email --</option>
   </select>
 
-  <div class="user-info" id="userName">Username: -</div>
-  <div class="user-info" id="userEmail">Email: -</div>
+  <div class="label">Username</div>
+  <div id="userName" class="info">-</div>
 
-  <div class="balance-display">Current Balance: Rs <span id="currentBalance">0.00</span></div>
+  <div class="label">Email</div>
+  <div id="userEmail" class="info">-</div>
 
-  <label for="amountInput">Enter Amount (Rs)</label>
-  <input type="number" id="amountInput" placeholder="e.g. 500" min="0.01" step="0.01" />
-
-  <button onclick="changeBalance(true)">➕ Add Balance</button>
-  <button onclick="changeBalance(false)">➖ Deduct Balance</button>
+  <div class="label">Current Balance (Rs)</div>
+  <div id="userBalance" class="info">0.00</div>
 </div>
 
 <script>
   const usersKey = "usersList";
   const userSelect = document.getElementById("userSelect");
-  const userNameEl = document.getElementById("userName");
-  const userEmailEl = document.getElementById("userEmail");
-  const currentBalanceEl = document.getElementById("currentBalance");
-  const amountInput = document.getElementById("amountInput");
+  const userNameDisplay = document.getElementById("userName");
+  const userEmailDisplay = document.getElementById("userEmail");
+  const userBalanceDisplay = document.getElementById("userBalance");
 
-  // Initialize sample users if not exist
+  // Sample users added only once
   if (!localStorage.getItem(usersKey)) {
     const sampleUsers = [
       { name: "Milan Kandel", email: "milankandel584@gmail.com", balance: 850.75 },
@@ -111,88 +86,39 @@
     return JSON.parse(localStorage.getItem(usersKey)) || [];
   }
 
-  function saveUsers(users) {
-    localStorage.setItem(usersKey, JSON.stringify(users));
-  }
-
   function populateUserDropdown() {
     const users = getUsers();
-    userSelect.innerHTML = `<option value="">-- Select a user --</option>`;
+    userSelect.innerHTML = `<option value="">-- Select User by Email --</option>`;
     users.forEach(user => {
-      const opt = document.createElement("option");
-      opt.value = user.email;
-      opt.textContent = `${user.name} (${user.email})`;
-      userSelect.appendChild(opt);
+      const option = document.createElement("option");
+      option.value = user.email;
+      option.textContent = `${user.name} (${user.email})`;
+      userSelect.appendChild(option);
     });
-
-    // Optionally, restore previously selected user
-    const selectedEmail = localStorage.getItem("selectedUserEmail");
-    if (selectedEmail) {
-      userSelect.value = selectedEmail;
-      loadUser();
-    }
   }
 
-  function loadUser() {
+  function showUserDetails() {
     const email = userSelect.value;
     if (!email) {
-      userNameEl.textContent = "Username: -";
-      userEmailEl.textContent = "Email: -";
-      currentBalanceEl.textContent = "0.00";
-      amountInput.value = "";
-      localStorage.removeItem("selectedUserEmail");
+      userNameDisplay.textContent = "-";
+      userEmailDisplay.textContent = "-";
+      userBalanceDisplay.textContent = "0.00";
       return;
     }
-
-    localStorage.setItem("selectedUserEmail", email);
-
     const users = getUsers();
     const user = users.find(u => u.email === email);
-
-    if (!user) return;
-
-    userNameEl.textContent = `Username: ${user.name}`;
-    userEmailEl.textContent = `Email: ${user.email}`;
-    currentBalanceEl.textContent = user.balance.toFixed(2);
-    amountInput.value = "";
-  }
-
-  function changeBalance(isAdd) {
-    const amount = parseFloat(amountInput.value);
-    const email = userSelect.value;
-
-    if (!email) {
-      alert("Please select a user.");
-      return;
-    }
-    if (isNaN(amount) || amount <= 0) {
-      alert("Please enter a valid positive amount.");
-      return;
-    }
-
-    const users = getUsers();
-    const user = users.find(u => u.email === email);
-
     if (!user) {
-      alert("User not found.");
+      userNameDisplay.textContent = "User not found";
+      userEmailDisplay.textContent = "-";
+      userBalanceDisplay.textContent = "0.00";
       return;
     }
-
-    if (!isAdd && user.balance < amount) {
-      alert("❌ Insufficient balance to deduct.");
-      return;
-    }
-
-    user.balance = isAdd ? user.balance + amount : user.balance - amount;
-    saveUsers(users);
-
-    currentBalanceEl.textContent = user.balance.toFixed(2);
-    alert(`✅ Rs ${amount.toFixed(2)} ${isAdd ? 'added to' : 'deducted from'} ${user.name}'s balance.`);
-
-    amountInput.value = "";
+    userNameDisplay.textContent = user.name;
+    userEmailDisplay.textContent = user.email;
+    userBalanceDisplay.textContent = user.balance.toFixed(2);
   }
 
-  // Initialize dropdown on page load
+  // Populate dropdown on page load
   populateUserDropdown();
 </script>
 
