@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>QR Scan</title>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+<body>
+  <h2>Scan QR Code</h2>
+  <div id="reader" style="width: 300px;"></div>
+  <p id="result"></p>
+
+  <script>
+    const resultBox = document.getElementById('result');
+    const qr = new Html5Qrcode("reader");
+
+    function success(decodedText, decodedResult) {
+      qr.stop();
+      resultBox.textContent = "Scanned: " + decodedText;
+    }
+
+    Html5Qrcode.getCameras().then(cameras => {
+      if (cameras && cameras.length) {
+        qr.start(cameras[0].id, { fps: 10, qrbox: 250 }, success);
+      } else {
+        resultBox.textContent = "No camera found.";
+      }
+    }).catch(err => {
+      resultBox.textContent = "Error: " + err;
+    });
+  </script>
+</body>
+</html>
