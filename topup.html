@@ -5,8 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Top-Up</title>
   <style>
-    body { font-family: 'Poppins', sans-serif; background: #f4f6fa; padding: 20px; }
-    h2 { text-align: center; color: #512da8; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f4f6fa;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+      color: #512da8;
+    }
     form {
       background: white;
       padding: 20px;
@@ -14,7 +21,11 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
       margin-top: 20px;
     }
-    label { display: block; margin-bottom: 6px; font-weight: 500; }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
     input, select {
       width: 100%;
       padding: 12px;
@@ -33,7 +44,22 @@
       font-size: 16px;
       cursor: pointer;
     }
-    .balance { text-align: center; font-size: 15px; margin-top: 10px; color: #333; }
+    .balance {
+      text-align: center;
+      font-size: 15px;
+      margin-top: 10px;
+      color: #333;
+    }
+    .message {
+      text-align: center;
+      font-size: 14px;
+      margin-top: 12px;
+      color: red;
+      font-weight: bold;
+    }
+    .success {
+      color: green;
+    }
   </style>
 </head>
 <body>
@@ -44,7 +70,9 @@
     Wallet Balance: Rs <span id="walletBalance">0.00</span>
   </div>
 
-  <form onsubmit="topUp(event)">
+  <div class="message" id="messageBox"></div>
+
+  <form id="topupForm">
     <label for="operator">Select Operator</label>
     <select id="operator" required>
       <option value="" disabled selected>Select Operator</option>
@@ -64,40 +92,56 @@
 
   <script>
     const profile = JSON.parse(localStorage.getItem("userProfile")) || { wallet: 0 };
-    document.getElementById("walletBalance").textContent = profile.wallet.toFixed(2);
+    const walletBalance = document.getElementById("walletBalance");
+    const messageBox = document.getElementById("messageBox");
 
-    function topUp(e) {
+    walletBalance.textContent = parseFloat(profile.wallet).toFixed(2);
+
+    document.getElementById("topupForm").addEventListener("submit", function(e) {
       e.preventDefault();
+
       const operator = document.getElementById("operator").value;
       const number = document.getElementById("number").value.trim();
       const amount = parseFloat(document.getElementById("amount").value);
 
+      // Validation
       if (!operator || !number || isNaN(amount) || amount < 10) {
-        alert("Please fill all fields correctly.");
+        messageBox.textContent = "Please fill all fields correctly.";
+        messageBox.className = "message";
         return;
       }
 
       if (profile.wallet < amount) {
-        alert(`Insufficient balance. You have Rs ${profile.wallet.toFixed(2)}.`);
+        messageBox.textContent = `❌ Insufficient balance. You have Rs ${profile.wallet.toFixed(2)}.`;
+        messageBox.className = "message";
         return;
       }
 
+      // Deduct and save
       profile.wallet -= amount;
       localStorage.setItem("userProfile", JSON.stringify(profile));
 
+      // Save transaction
       const transactions = JSON.parse(localStorage.getItem("walletTransactions")) || [];
       transactions.push({
         date: new Date().toLocaleDateString(),
         type: "Debit",
         wallet: "Top-Up " + operator,
         toFrom: number,
-        amount
+        amount: amount
       });
       localStorage.setItem("walletTransactions", JSON.stringify(transactions));
 
-      alert(`Recharged Rs ${amount.toFixed(2)} to ${number} (${operator})`);
-      location.reload();
-    }
+      // Show success
+      messageBox.textContent = `✅ Recharged Rs ${amount.toFixed(2)} to ${number} (${operator})`;
+      messageBox.className = "message success";
+
+      // Update balance
+      walletBalance.textContent = profile.wallet.toFixed(2);
+
+      // Reset form
+      e.target.reset();
+    });
   </script>
 
 </body>
