@@ -15,7 +15,7 @@
       margin-top: 20px;
     }
     label { display: block; margin-bottom: 6px; font-weight: 500; }
-    input {
+    input, select {
       width: 100%;
       padding: 12px;
       margin-bottom: 16px;
@@ -45,6 +45,17 @@
   </div>
 
   <form onsubmit="sendMoney(event)">
+    <label for="service">Select Wallet Service</label>
+    <select id="service" required>
+      <option value="">-- Select Wallet --</option>
+      <option value="Khalti">Khalti</option>
+      <option value="eSewa">eSewa</option>
+      <option value="IME Pay">IME Pay</option>
+      <option value="Prabhu Pay">Prabhu Pay</option>
+      <option value="CellPay">CellPay</option>
+      <option value="Namaste Pay">Namaste Pay</option>
+    </select>
+
     <label for="recipient">Recipient ID / Phone</label>
     <input type="text" id="recipient" required />
 
@@ -60,8 +71,15 @@
 
     function sendMoney(e) {
       e.preventDefault();
+
+      const service = document.getElementById("service").value;
       const recipient = document.getElementById("recipient").value.trim();
       const amount = parseFloat(document.getElementById("amount").value);
+
+      if (!service) {
+        alert("Please select a wallet service.");
+        return;
+      }
 
       if (!recipient || isNaN(amount) || amount <= 0) {
         alert("Please fill all fields correctly.");
@@ -73,21 +91,22 @@
         return;
       }
 
-      // Deduct and save
+      // Deduct and save balance
       profile.wallet -= amount;
       localStorage.setItem("userProfile", JSON.stringify(profile));
 
+      // Save transaction with wallet service info
       const transactions = JSON.parse(localStorage.getItem("walletTransactions")) || [];
       transactions.push({
         date: new Date().toLocaleDateString(),
         type: "Debit",
-        wallet: "Send Money",
+        wallet: service,
         toFrom: recipient,
         amount
       });
       localStorage.setItem("walletTransactions", JSON.stringify(transactions));
 
-      alert(`Rs ${amount.toFixed(2)} sent to ${recipient}`);
+      alert(`Rs ${amount.toFixed(2)} sent to ${recipient} via ${service}`);
       location.reload();
     }
   </script>
