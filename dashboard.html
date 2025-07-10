@@ -3,57 +3,186 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard</title>
-  <link rel="stylesheet" href="dash.css" />
+  <title>Luise Mobile Banking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: #f2f4f8;
+      color: #222;
+    }
+
+    header {
+      background: #512da8;
+      color: white;
+      padding: 20px 16px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 600;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .dashboard {
+      padding: 20px;
+    }
+
+    .balance-box {
+      background: linear-gradient(to right, #673ab7, #512da8);
+      color: white;
+      padding: 25px;
+      border-radius: 16px;
+      text-align: center;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 20px rgba(103, 58, 183, 0.3);
+    }
+
+    .balance-box h3 {
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .balance-box p {
+      font-size: 26px;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+    }
+
+    .card h4 {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .menu {
+      background: white;
+      padding: 16px;
+      border-radius: 14px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    }
+
+    .menu h3 {
+      margin-bottom: 10px;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .menu-item {
+      background: #f5f6fa;
+      padding: 14px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .menu-item:hover {
+      background: #e8eaf6;
+    }
+
+    .menu-item span {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 5px;
+    }
+
+    @media (max-width: 600px) {
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .menu-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
 </head>
 <body>
+
+  <header>Luise Mobile Banking</header>
+
   <div class="dashboard">
-    
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <h2>Luise Bank</h2>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="profile.html">Profile</a></li>
-        <li><a href="acnumber.html">Account Number</a></li>
-        <li><a href="balance.html">Balance</a></li>
-<li><a href="deposit.html">Deposit</a></li>
-        <li><a href="transfer.html">Transfer</a></li>
-        <li><a href="transactions.html">Transactions</a></li>
-<li><a href="admin-login.html">Only Admins</a></li>
-        <li><a href="authentication.html">Logout</a></li>
-      </ul>
-    </aside>
 
-    <!-- Main Content -->
-    <div class="main-content">
-      <!-- Header -->
-      <header class="header">
-        <h1>Welcome to Your Dashboard</h1>
-      </header>
-
-      <!-- Overview Section -->
-      <section class="overview">
-        <div class="card">
-          <h3>Balance</h3>
-          <p>Rs. <span id="dashboardBalance">0.00</span></p>
-        </div>
-        <div class="card">
-          <h3>Transactions</h3>
-          <p>25 this month</p>
-        </div>
-        <div class="card">
-          <h3>Notifications</h3>
-          <p>3 unread messages</p>
-        </div>
-      </section>
+    <!-- Balance Card -->
+    <div class="balance-box">
+      <h3>Total Balance</h3>
+      <p>Rs. <span id="dashboardBalance">0.00</span></p>
     </div>
+
+    <!-- Summary Cards -->
+    <div class="cards">
+      <div class="card">
+        <h4>Transactions</h4>
+        <p>25 this month</p>
+      </div>
+      <div class="card">
+        <h4>Unread Notifications</h4>
+        <p>3 messages</p>
+      </div>
+    </div>
+
+    <!-- Quick Actions Menu -->
+    <div class="menu">
+      <h3>Quick Actions</h3>
+      <div class="menu-grid">
+        <div class="menu-item"><span>🏠</span><a href="index.html">Home</a></div>
+        <div class="menu-item"><span>👤</span><a href="profile.html">Profile</a></div>
+        <div class="menu-item"><span>🔢</span><a href="acnumber.html">Account Number</a></div>
+        <div class="menu-item"><span>💰</span><a href="balance.html">Balance</a></div>
+        <div class="menu-item"><span>📥</span><a href="deposit.html">Deposit</a></div>
+        <div class="menu-item"><span>💡</span><a href="paybills.html">Pay Bills</a></div>
+        <div class="menu-item"><span>📝</span><a href="loans.html">Apply Loan</a></div>
+        <div class="menu-item"><span>💸</span><a href="transfer.html">Transfer</a></div>
+        <div class="menu-item"><span>💳</span><a href="applycards.html">Apply Card</a></div>
+        <div class="menu-item"><span>📜</span><a href="transactions.html">History</a></div>
+        <div class="menu-item"><span>🔐</span><a href="admin-login.html">Only Admins</a></div>
+        <div class="menu-item"><span>🚪</span><a href="authentication.html">Logout</a></div>
+      </div>
+    </div>
+
   </div>
 
   <script>
-    // Load balance from userProfile or default
     const profile = JSON.parse(localStorage.getItem("userProfile")) || { balance: 0 };
     document.getElementById("dashboardBalance").textContent = parseFloat(profile.balance).toFixed(2);
   </script>
+
 </body>
 </html>
