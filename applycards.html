@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Apply for Card - Luise Bank</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: #f4f6fa;
+      color: #333;
+    }
+
+    header {
+      background: #512da8;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 30px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #512da8;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0 6px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 20px;
+      background: #512da8;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #3e1f94;
+    }
+  </style>
+</head>
+<body>
+
+<header>Apply for Bank Card</header>
+
+<div class="container">
+  <h2>Card Application</h2>
+
+  <label for="cardType">Select Card Type</label>
+  <select id="cardType">
+    <option>Debit Card</option>
+    <option>Credit Card</option>
+    <option>Prepaid Card</option>
+  </select>
+
+  <label for="name">Full Name</label>
+  <input type="text" id="name" placeholder="e.g., Milan Kandel" />
+
+  <label for="dob">Date of Birth</label>
+  <input type="date" id="dob" />
+
+  <label for="reason">Why do you need this card?</label>
+  <textarea id="reason" rows="3" placeholder="Explain briefly..."></textarea>
+
+  <button onclick="submitCard()">Submit Application</button>
+</div>
+
+<script>
+  function submitCard() {
+    const cardType = document.getElementById('cardType').value;
+    const name = document.getElementById('name').value;
+    const dob = document.getElementById('dob').value;
+    const reason = document.getElementById('reason').value;
+
+    if (!name || !dob || !reason) {
+      alert("Please fill all fields.");
+      return;
+    }
+
+    alert(`Your ${cardType} application has been submitted successfully!`);
+  }
+</script>
+
+</body>
+</html>
