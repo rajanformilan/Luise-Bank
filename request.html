@@ -26,7 +26,7 @@
       margin-bottom: 6px;
       font-weight: 500;
     }
-    input {
+    input, select {
       width: 100%;
       padding: 12px;
       margin-bottom: 16px;
@@ -49,6 +49,17 @@
 <body>
   <h2>📥 Request Money</h2>
   <form onsubmit="requestMoney(event)">
+    <label for="walletService">Request From Wallet Service</label>
+    <select id="walletService" required>
+      <option value="">-- Select Wallet --</option>
+      <option value="Khalti">Khalti</option>
+      <option value="eSewa">eSewa</option>
+      <option value="IME Pay">IME Pay</option>
+      <option value="Prabhu Pay">Prabhu Pay</option>
+      <option value="CellPay">CellPay</option>
+      <option value="Namaste Pay">Namaste Pay</option>
+    </select>
+
     <label for="fromName">Request From (Name)</label>
     <input type="text" id="fromName" required />
 
@@ -65,30 +76,43 @@
     function requestMoney(e) {
       e.preventDefault();
 
+      const walletService = document.getElementById('walletService').value;
       const fromName = document.getElementById('fromName').value.trim();
       const fromId = document.getElementById('fromId').value.trim();
       const amount = parseFloat(document.getElementById('amount').value);
 
-      if (!fromName) return alert('Please enter a valid name.');
-      if (!fromId) return alert('Please enter a valid account ID or phone number.');
-      if (amount <= 0) return alert('Please enter a valid amount.');
+      if (!walletService) {
+        alert('Please select a wallet service.');
+        return;
+      }
+      if (!fromName) {
+        alert('Please enter a valid name.');
+        return;
+      }
+      if (!fromId) {
+        alert('Please enter a valid account ID or phone number.');
+        return;
+      }
+      if (amount <= 0) {
+        alert('Please enter a valid amount.');
+        return;
+      }
 
       const requestTx = {
         date: new Date().toLocaleDateString(),
         type: "Request",
+        walletService,
         fromName,
         fromId,
         amount
       };
 
-      // Save requests separately or together
       const requests = JSON.parse(localStorage.getItem("moneyRequests")) || [];
       requests.push(requestTx);
       localStorage.setItem("moneyRequests", JSON.stringify(requests));
 
-      alert(`Request for Rs ${amount.toFixed(2)} sent to ${fromName} (ID: ${fromId})`);
+      alert(`Request for Rs ${amount.toFixed(2)} sent via ${walletService} to ${fromName} (ID: ${fromId})`);
 
-      // Reset form
       e.target.reset();
     }
   </script>
