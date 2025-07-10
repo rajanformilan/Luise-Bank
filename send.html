@@ -33,7 +33,20 @@
       font-size: 16px;
       cursor: pointer;
     }
-    .balance { text-align: center; font-size: 15px; margin-top: 10px; color: #333; }
+    .balance {
+      text-align: center;
+      font-size: 15px;
+      margin-top: 10px;
+      color: #333;
+    }
+    .message {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .success { color: green; }
+    .error { color: red; }
   </style>
 </head>
 <body>
@@ -44,7 +57,7 @@
     Wallet Balance: Rs <span id="walletBalance">0.00</span>
   </div>
 
-  <form onsubmit="sendMoney(event)">
+  <form id="sendForm">
     <label for="service">Select Wallet Service</label>
     <select id="service" required>
       <option value="">-- Select Wallet --</option>
@@ -65,50 +78,64 @@
     <button type="submit">Send</button>
   </form>
 
+  <div class="message" id="resultMessage"></div>
+
   <script>
-    const profile = JSON.parse(localStorage.getItem("userProfile")) || { wallet: 0 };
-    document.getElementById("walletBalance").textContent = profile.wallet.toFixed(2);
+    document.addEventListener("DOMContentLoaded", function () {
+      const profile = JSON.parse(localStorage.getItem("userProfile")) || { wallet: 0 };
+      const walletBalance = document.getElementById("walletBalance");
+      const resultMessage = document.getElementById("resultMessage");
+      walletBalance.textContent = profile.wallet.toFixed(2);
 
-    function sendMoney(e) {
-      e.preventDefault();
+      const sendForm = document.getElementById("sendForm");
+      sendForm.addEventListener("submit", function (e) {
+        e.preventDefault();
 
-      const service = document.getElementById("service").value;
-      const recipient = document.getElementById("recipient").value.trim();
-      const amount = parseFloat(document.getElementById("amount").value);
+        const service = document.getElementById("service").value;
+        const recipient = document.getElementById("recipient").value.trim();
+        const amount = parseFloat(document.getElementById("amount").value);
 
-      if (!service) {
-        alert("Please select a wallet service.");
-        return;
-      }
+        if (!service) {
+          resultMessage.textContent = "❌ Please select a wallet service.";
+          resultMessage.className = "message error";
+          return;
+        }
 
-      if (!recipient || isNaN(amount) || amount <= 0) {
-        alert("Please fill all fields correctly.");
-        return;
-      }
+        if (!recipient || isNaN(amount) || amount <= 0) {
+          resultMessage.textContent = "❌ Please fill all fields correctly.";
+          resultMessage.className = "message error";
+          return;
+        }
 
-      if (profile.wallet < amount) {
-        alert(`Insufficient balance. You have Rs ${profile.wallet.toFixed(2)}.`);
-        return;
-      }
+        if (profile.wallet < amount) {
+          resultMessage.textContent = `❌ Insufficient balance. You have Rs ${profile.wallet.toFixed(2)}.`;
+          resultMessage.className = "message error";
+          return;
+        }
 
-      // Deduct and save balance
-      profile.wallet -= amount;
-      localStorage.setItem("userProfile", JSON.stringify(profile));
+        // Deduct balance
+        profile.wallet -= amount;
+        localStorage.setItem("userProfile", JSON.stringify(profile));
+        walletBalance.textContent = profile.wallet.toFixed(2);
 
-      // Save transaction with wallet service info
-      const transactions = JSON.parse(localStorage.getItem("walletTransactions")) || [];
-      transactions.push({
-        date: new Date().toLocaleDateString(),
-        type: "Debit",
-        wallet: service,
-        toFrom: recipient,
-        amount
+        // Save transaction
+        const transactions = JSON.parse(localStorage.getItem("walletTransactions")) || [];
+        transactions.push({
+          date: new Date().toLocaleDateString(),
+          type: "Debit",
+          wallet: service,
+          toFrom: recipient,
+          amount: amount
+        });
+        localStorage.setItem("walletTransactions", JSON.stringify(transactions));
+
+        resultMessage.textContent = `✅ Rs ${amount.toFixed(2)} sent to ${recipient} via ${service}`;
+        resultMessage.className = "message success";
+
+        // Clear form
+        sendForm.reset();
       });
-      localStorage.setItem("walletTransactions", JSON.stringify(transactions));
-
-      alert(`Rs ${amount.toFixed(2)} sent to ${recipient} via ${service}`);
-      location.reload();
-    }
+    });
   </script>
 
 </body>
