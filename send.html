@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Send Money</title>
   <style>
     body { font-family: 'Poppins', sans-serif; background: #f4f6fa; padding: 20px; }
@@ -82,7 +82,7 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      const profile = JSON.parse(localStorage.getItem("userProfile")) || { wallet: 0 };
+      const profile = JSON.parse(localStorage.getItem("userProfile")) || { wallet: 1000 }; // Default 1000 Rs
       const walletBalance = document.getElementById("walletBalance");
       const resultMessage = document.getElementById("resultMessage");
       walletBalance.textContent = profile.wallet.toFixed(2);
@@ -132,7 +132,7 @@
         resultMessage.textContent = `✅ Rs ${amount.toFixed(2)} sent to ${recipient} via ${service}`;
         resultMessage.className = "message success";
 
-        // Clear form
+        // Clear form inputs
         sendForm.reset();
       });
     });
