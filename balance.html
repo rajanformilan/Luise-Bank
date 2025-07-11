@@ -6,10 +6,7 @@
   <title>Bank Balance - FD & SIP</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
@@ -34,14 +31,8 @@
       margin-bottom: 20px;
     }
 
-    .info {
-      margin: 8px 0;
-      font-size: 15px;
-    }
-
-    .info span {
-      font-weight: 600;
-    }
+    .info { margin: 8px 0; font-size: 15px; }
+    .info span { font-weight: 600; }
 
     .balance {
       font-size: 28px;
@@ -83,10 +74,7 @@
       background-color: #145dc1;
     }
 
-    .section {
-      margin-top: 24px;
-    }
-
+    .section { margin-top: 24px; }
     .section h3 {
       font-size: 18px;
       color: #444;
@@ -115,7 +103,7 @@
   <div class="info"><strong>Name:</strong> <span id="username">-</span></div>
   <div class="info"><strong>Email:</strong> <span id="email">-</span></div>
   <div class="info"><strong>Plan:</strong> <span id="planDisplay">-</span></div>
-  <div class="balance">Rs <span id="balance">0</span></div>
+  <div class="balance">Rs <span id="balance">0.00</span></div>
 
   <label>Select Interest Plan</label>
   <select id="plan">
@@ -144,16 +132,26 @@
 </div>
 
 <script>
-  let profile = JSON.parse(localStorage.getItem("userProfile")) || {
+  const email = localStorage.getItem("currentUserEmail");
+  if (!email) {
+    alert("You're not logged in!");
+    location.href = "login.html";
+  }
+
+  const profileKey = `userProfile_${email}`;
+  let profile = JSON.parse(localStorage.getItem(profileKey)) || {
     name: "User",
-    email: "user@example.com",
+    email: email,
     plan: "2-5",
     balance: 0
   };
 
-  let sipAmount = parseFloat(localStorage.getItem("sipAmount")) || 0;
-  let lastMonth = localStorage.getItem("lastMonth");
-  let selectedPlan = profile.plan || "2-5";
+  let sipKey = `sipAmount_${email}`;
+  let sipAmount = parseFloat(localStorage.getItem(sipKey)) || 0;
+
+  let monthKey = `lastMonth_${email}`;
+  let lastMonth = localStorage.getItem(monthKey);
+  let selectedPlan = profile.plan;
   let balance = parseFloat(profile.balance) || 0;
 
   const usernameDisplay = document.getElementById("username");
@@ -172,7 +170,7 @@
     planDisplay.textContent = selectedPlan;
     profile.balance = balance;
     profile.plan = selectedPlan;
-    localStorage.setItem("userProfile", JSON.stringify(profile));
+    localStorage.setItem(profileKey, JSON.stringify(profile));
   }
 
   function getRandomMonthlyRate(plan) {
@@ -195,7 +193,7 @@
       balance += sipAmount;
     }
 
-    localStorage.setItem("lastMonth", currentMonth);
+    localStorage.setItem(monthKey, currentMonth);
     updateBalanceDisplay();
   }
 
@@ -211,14 +209,14 @@
     const amount = parseFloat(document.getElementById("sipAmount").value);
     if (!amount || amount <= 0) return alert("Enter valid SIP amount");
     sipAmount = amount;
-    localStorage.setItem("sipAmount", sipAmount);
+    localStorage.setItem(sipKey, sipAmount);
     alert("SIP Started. Monthly Rs " + amount + " will be added automatically.");
   }
 
   planSelect.addEventListener("change", () => {
     selectedPlan = planSelect.value;
     profile.plan = selectedPlan;
-    localStorage.setItem("userProfile", JSON.stringify(profile));
+    localStorage.setItem(profileKey, JSON.stringify(profile));
     planDisplay.textContent = selectedPlan;
   });
 
