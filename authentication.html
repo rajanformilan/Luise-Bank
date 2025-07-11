@@ -2,148 +2,300 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Luise Bank Login</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign Up / Login with Profile Image</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet" />
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+    /* Same styles as before plus new styles for image preview */
+    * {
+      box-sizing: border-box;
+      margin: 0; padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
     body {
-      background: linear-gradient(to right, #6a1b9a, #8e24aa);
-      min-height: 100vh;
+      background: #f2f4f8;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
     }
-
-    .auth-box {
+    .container {
       background: white;
-      padding: 30px;
-      border-radius: 16px;
-      max-width: 400px;
-      width: 100%;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+      border-radius: 14px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+      width: 360px;
+      padding: 30px 28px;
+    }
+    h2 {
       text-align: center;
-    }
-
-    .auth-box h2 {
-      color: #6a1b9a;
       margin-bottom: 20px;
+      color: #512da8;
+      font-weight: 600;
     }
-
-    .profile-pic {
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #ddd;
+    }
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+      color: #666;
+      border-bottom: 2px solid transparent;
+      transition: 0.3s;
+    }
+    .tab.active {
+      color: #512da8;
+      border-color: #512da8;
+    }
+    form {
+      display: none;
+    }
+    form.active {
+      display: block;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      font-size: 14px;
+      color: #444;
+    }
+    input {
+      width: 100%;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      transition: border-color 0.3s;
+    }
+    input:focus {
+      border-color: #512da8;
+      outline: none;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #512da8;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #3a1e72;
+    }
+    .message {
+      text-align: center;
+      margin-top: 10px;
+      font-weight: 600;
+    }
+    .message.error {
+      color: #d32f2f;
+    }
+    .message.success {
+      color: #388e3c;
+    }
+    #profilePreview {
+      display: block;
+      margin: 10px auto 16px auto;
       width: 90px;
       height: 90px;
       border-radius: 50%;
       object-fit: cover;
-      margin-bottom: 12px;
-      border: 3px solid #8e24aa;
-    }
-
-    input[type="file"] {
-      margin: 10px 0;
-    }
-
-    input[type="text"],
-    input[type="email"],
-    input[type="password"] {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 16px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      font-size: 14px;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      background-color: #6a1b9a;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    button:hover {
-      background-color: #4a148c;
-    }
-
-    .footer {
-      margin-top: 14px;
-      font-size: 13px;
-      color: #555;
-    }
-
-    .footer a {
-      color: #6a1b9a;
-      text-decoration: none;
-    }
-
-    .footer a:hover {
-      text-decoration: underline;
+      border: 2px solid #512da8;
     }
   </style>
 </head>
 <body>
 
-  <div class="auth-box">
-    <h2>🔐 Luise Bank Login</h2>
-    <img src="https://via.placeholder.com/90" id="preview" class="profile-pic" alt="Profile Picture" />
-    <input type="file" id="photoInput" accept="image/*" />
+<div class="container">
+  <h2>Welcome</h2>
 
-    <input type="text" id="username" placeholder="Full Name" required />
-    <input type="email" id="email" placeholder="Email Address" required />
-    <input type="password" id="password" placeholder="Password" required />
-
-    <button onclick="login()">Continue</button>
-
-    <div class="footer">By continuing, you agree to our <a href="#">terms</a>.</div>
+  <div class="tabs">
+    <div id="tabSignUp" class="tab active">Sign Up</div>
+    <div id="tabLogin" class="tab">Login</div>
   </div>
 
-  <script>
-    const preview = document.getElementById("preview");
-    const photoInput = document.getElementById("photoInput");
+  <!-- Sign Up Form -->
+  <form id="signUpForm" class="active" autocomplete="off">
+    <label for="suName">Full Name</label>
+    <input type="text" id="suName" required placeholder="Enter your full name" />
 
-    photoInput.addEventListener("change", function() {
-      const file = this.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          preview.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-    });
+    <label for="suEmail">Email</label>
+    <input type="email" id="suEmail" required placeholder="example@email.com" />
 
-    function login() {
-      const username = document.getElementById("username").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
-      const photo = preview.src;
+    <label for="suPassword">Password</label>
+    <input type="password" id="suPassword" required placeholder="Minimum 6 characters" minlength="6" />
 
-      if (!username || !email || !password) {
-        alert("Please fill all fields.");
-        return;
-      }
+    <label for="suProfilePic">Profile Picture</label>
+    <input type="file" id="suProfilePic" accept="image/*" />
 
-      const user = {
-        name: username,
-        email,
-        password,
-        balance: 0,
-        wallet: 0,
-        plan: "2-5",
-        photo
+    <img id="profilePreview" src="" alt="Profile Preview" style="display:none;" />
+
+    <button type="submit">Sign Up</button>
+    <div id="signUpMessage" class="message"></div>
+  </form>
+
+  <!-- Login Form -->
+  <form id="loginForm" autocomplete="off">
+    <label for="liEmail">Email</label>
+    <input type="email" id="liEmail" required placeholder="Enter your email" />
+
+    <label for="liPassword">Password</label>
+    <input type="password" id="liPassword" required placeholder="Enter your password" />
+
+    <button type="submit">Login</button>
+    <div id="loginMessage" class="message"></div>
+  </form>
+</div>
+
+<script>
+  const tabSignUp = document.getElementById('tabSignUp');
+  const tabLogin = document.getElementById('tabLogin');
+  const signUpForm = document.getElementById('signUpForm');
+  const loginForm = document.getElementById('loginForm');
+  const signUpMessage = document.getElementById('signUpMessage');
+  const loginMessage = document.getElementById('loginMessage');
+
+  // Switch tabs
+  tabSignUp.onclick = () => {
+    tabSignUp.classList.add('active');
+    tabLogin.classList.remove('active');
+    signUpForm.classList.add('active');
+    loginForm.classList.remove('active');
+    clearMessages();
+  };
+  tabLogin.onclick = () => {
+    tabLogin.classList.add('active');
+    tabSignUp.classList.remove('active');
+    loginForm.classList.add('active');
+    signUpForm.classList.remove('active');
+    clearMessages();
+  };
+
+  function clearMessages() {
+    signUpMessage.textContent = '';
+    signUpMessage.className = 'message';
+    loginMessage.textContent = '';
+    loginMessage.className = 'message';
+  }
+
+  // Profile picture preview
+  const profilePicInput = document.getElementById('suProfilePic');
+  const profilePreview = document.getElementById('profilePreview');
+  let profileImageBase64 = '';
+
+  profilePicInput.addEventListener('change', () => {
+    const file = profilePicInput.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        profileImageBase64 = e.target.result;
+        profilePreview.src = profileImageBase64;
+        profilePreview.style.display = 'block';
       };
-
-      localStorage.setItem("currentUserEmail", email);
-      localStorage.setItem("userProfile_" + email, JSON.stringify(user));
-      alert("Login successful!");
-      window.location.href = "profile.html";
+      reader.readAsDataURL(file);
+    } else {
+      profileImageBase64 = '';
+      profilePreview.src = '';
+      profilePreview.style.display = 'none';
     }
-  </script>
+  });
+
+  // Handle Sign Up
+  signUpForm.addEventListener('submit', e => {
+    e.preventDefault();
+
+    clearMessages();
+
+    const name = document.getElementById('suName').value.trim();
+    const email = document.getElementById('suEmail').value.trim().toLowerCase();
+    const password = document.getElementById('suPassword').value;
+
+    if (!name || !email || !password) {
+      signUpMessage.textContent = 'Please fill all required fields.';
+      signUpMessage.classList.add('error');
+      return;
+    }
+
+    if (password.length < 6) {
+      signUpMessage.textContent = 'Password must be at least 6 characters.';
+      signUpMessage.classList.add('error');
+      return;
+    }
+
+    // Check if user already exists
+    if (localStorage.getItem('userProfile_' + email)) {
+      signUpMessage.textContent = 'Email already registered. Please login.';
+      signUpMessage.classList.add('error');
+      return;
+    }
+
+    const userProfile = {
+      name,
+      email,
+      password, // Warning: Do not store plain passwords in real apps!
+      balance: 0,
+      profilePic: profileImageBase64 || ''  // Save base64 image or empty string
+    };
+    localStorage.setItem('userProfile_' + email, JSON.stringify(userProfile));
+    signUpMessage.textContent = 'Sign up successful! You can now login.';
+    signUpMessage.classList.add('success');
+    signUpForm.reset();
+    profilePreview.style.display = 'none';
+    profileImageBase64 = '';
+  });
+
+  // Handle Login
+  loginForm.addEventListener('submit', e => {
+    e.preventDefault();
+
+    clearMessages();
+
+    const email = document.getElementById('liEmail').value.trim().toLowerCase();
+    const password = document.getElementById('liPassword').value;
+
+    if (!email || !password) {
+      loginMessage.textContent = 'Please enter email and password.';
+      loginMessage.classList.add('error');
+      return;
+    }
+
+    const storedProfileStr = localStorage.getItem('userProfile_' + email);
+    if (!storedProfileStr) {
+      loginMessage.textContent = 'No account found with this email.';
+      loginMessage.classList.add('error');
+      return;
+    }
+
+    const storedProfile = JSON.parse(storedProfileStr);
+    if (storedProfile.password !== password) {
+      loginMessage.textContent = 'Incorrect password.';
+      loginMessage.classList.add('error');
+      return;
+    }
+
+    // Login success - save current user and redirect to dashboard
+    localStorage.setItem('userProfile', JSON.stringify(storedProfile));
+    localStorage.setItem('currentUserEmail', email);
+    loginMessage.textContent = 'Login successful! Redirecting...';
+    loginMessage.classList.add('success');
+
+    setTimeout(() => {
+      window.location.href = 'dashboard.html';
+    }, 1200);
+  });
+</script>
 
 </body>
 </html>
