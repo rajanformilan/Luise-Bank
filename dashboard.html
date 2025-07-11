@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Luise Mobile Banking</title>
+  <title>Luise Mobile Banking - Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
   <style>
     * {
@@ -48,16 +48,9 @@
     }
 
     .balance-box p {
-      font-size: 26px;
+      font-size: 28px;
       font-weight: 600;
       margin-top: 10px;
-    }
-
-    #welcomeText {
-      margin-top: 8px;
-      font-size: 14px;
-      font-weight: 400;
-      color: #e0dfff;
     }
 
     .cards {
@@ -151,7 +144,6 @@
     <div class="balance-box">
       <h3>Total Balance</h3>
       <p>Rs. <span id="dashboardBalance">0.00</span></p>
-      <p id="welcomeText">Welcome, <span id="dashboardName">User</span></p>
     </div>
 
     <!-- Summary Cards -->
@@ -172,33 +164,29 @@
       <div class="menu-grid">
         <div class="menu-item"><span>🏠</span><a href="index.html">Home</a></div>
         <div class="menu-item"><span>👤</span><a href="profile.html">Profile</a></div>
-        <div class="menu-item"><span>🏦</span><a href="ewallet.html">ewallet</a></div>
-        <div class="menu-item"><span>🔢</span><a href="acnumber.html">Account Number</a></div>
+        <div class="menu-item"><span>🏦</span><a href="ewallet.html">eWallet</a></div>
         <div class="menu-item"><span>💰</span><a href="balance.html">Balance</a></div>
-        <div class="menu-item"><span>📥</span><a href="deposit.html">Deposit</a></div>
-        <div class="menu-item"><span>💡</span><a href="paybills.html">Pay Bills</a></div>
-        <div class="menu-item"><span>📝</span><a href="loans.html">Apply Loan</a></div>
-        <div class="menu-item"><span>💸</span><a href="transfer.html">Transfer</a></div>
-        <div class="menu-item"><span>💳</span><a href="applycards.html">Apply Card</a></div>
-        <div class="menu-item"><span>📜</span><a href="transactions.html">History</a></div>
-        <div class="menu-item"><span>🔐</span><a href="admin-login.html">Only Admins</a></div>
-        <div class="menu-item"><span>🚪</span><a href="authentication.html">Logout</a></div>
+        <div class="menu-item"><span>📥</span><a href="top-up.html">Top-Up</a></div>
+        <div class="menu-item"><span>💸</span><a href="send.html">Send Money</a></div>
+        <div class="menu-item"><span>📜</span><a href="transactions.html">Transactions</a></div>
+        <div class="menu-item"><span>🚪</span><a href="logout.html">Logout</a></div>
       </div>
     </div>
 
   </div>
 
   <script>
-    const profile = JSON.parse(localStorage.getItem("userProfile")) || {};
-    const balance = parseFloat(profile.balance);
-
-    if (!isNaN(balance)) {
-      document.getElementById("dashboardBalance").textContent = balance.toFixed(2);
-    } else {
-      document.getElementById("dashboardBalance").textContent = "0.00";
+    // Get current user
+    const email = localStorage.getItem("currentUserEmail");
+    if (!email) {
+      alert("You're not logged in!");
+      window.location.href = "login.html";
     }
 
-    document.getElementById("dashboardName").textContent = profile.name || "User";
+    const profileKey = `userProfile_${email}`;
+    const profile = JSON.parse(localStorage.getItem(profileKey)) || { balance: 0 };
+
+    document.getElementById("dashboardBalance").textContent = parseFloat(profile.balance || 0).toFixed(2);
   </script>
 
 </body>
