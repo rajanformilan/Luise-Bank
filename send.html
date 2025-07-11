@@ -75,13 +75,20 @@
   <div id="resultMessage"></div>
 
   <script>
-    const profile = JSON.parse(localStorage.getItem("userProfile")) || { wallet: 0 };
+    const email = localStorage.getItem("currentUserEmail");
+    if (!email) {
+      alert("You are not logged in.");
+      window.location.href = "login.html";
+    }
+
+    const profileKey = `userProfile_${email}`;
+    let profile = JSON.parse(localStorage.getItem(profileKey)) || { balance: 0 };
+
     const walletBalanceSpan = document.getElementById("walletBalance");
     const resultMessage = document.getElementById("resultMessage");
     const sendForm = document.getElementById("sendForm");
 
-    // Show wallet balance on page load
-    walletBalanceSpan.textContent = profile.wallet.toFixed(2);
+    walletBalanceSpan.textContent = parseFloat(profile.balance || 0).toFixed(2);
 
     sendForm.addEventListener("submit", function(e) {
       e.preventDefault();
@@ -109,19 +116,20 @@
         return;
       }
 
-      if (profile.wallet < amount) {
-        resultMessage.textContent = `Insufficient balance. You have Rs ${profile.wallet.toFixed(2)}.`;
+      if (profile.balance < amount) {
+        resultMessage.textContent = `Insufficient balance. You have Rs ${profile.balance.toFixed(2)}.`;
         resultMessage.classList.add("error");
         return;
       }
 
-      // Deduct amount from wallet balance
-      profile.wallet -= amount;
-      localStorage.setItem("userProfile", JSON.stringify(profile));
-      walletBalanceSpan.textContent = profile.wallet.toFixed(2);
+      // Deduct amount
+      profile.balance -= amount;
+      localStorage.setItem(profileKey, JSON.stringify(profile));
+      walletBalanceSpan.textContent = profile.balance.toFixed(2);
 
-      // Save transaction
-      const transactions = JSON.parse(localStorage.getItem("walletTransactions")) || [];
+      // Save transaction to walletTransactions_<email>
+      const txKey = `walletTransactions_${email}`;
+      const transactions = JSON.parse(localStorage.getItem(txKey)) || [];
       transactions.push({
         date: new Date().toLocaleDateString(),
         type: "Debit",
@@ -129,12 +137,11 @@
         toFrom: recipient,
         amount
       });
-      localStorage.setItem("walletTransactions", JSON.stringify(transactions));
+      localStorage.setItem(txKey, JSON.stringify(transactions));
 
-      resultMessage.textContent = `Success! Rs ${amount.toFixed(2)} sent to ${recipient} via ${service}.`;
+      resultMessage.textContent = `✅ Success! Rs ${amount.toFixed(2)} sent to ${recipient} via ${service}.`;
       resultMessage.classList.add("success");
 
-      // Optionally reset form fields
       sendForm.reset();
     });
   </script>
