@@ -2,63 +2,100 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>eWallet</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My eWallet - Mobile Banking Style</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet" />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-    body { background: #f4f6fa; color: #333; padding: 20px; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: #f2f4f8;
+      color: #222;
+      padding: 20px;
+      min-height: 100vh;
+    }
     header {
-      background: #7b1fa2;
+      background: linear-gradient(90deg, #7b1fa2, #9c27b0);
       color: white;
       padding: 20px;
-      border-radius: 14px;
+      border-radius: 16px;
       text-align: center;
       font-size: 22px;
       font-weight: 600;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 6px 20px rgba(156, 39, 176, 0.4);
+      margin-bottom: 24px;
     }
-    .balance {
-      margin: 20px auto;
-      background: linear-gradient(to right, #9c27b0, #7b1fa2);
+
+    .balance-box {
+      background: linear-gradient(90deg, #9c27b0, #7b1fa2);
+      border-radius: 20px;
       color: white;
-      padding: 25px;
-      border-radius: 16px;
+      padding: 28px 20px;
       text-align: center;
-      box-shadow: 0 6px 18px rgba(123, 31, 162, 0.3);
+      box-shadow: 0 6px 24px rgba(156, 39, 176, 0.5);
+      margin-bottom: 30px;
     }
-    .balance h2 { font-size: 16px; }
-    .balance p { font-size: 26px; font-weight: bold; margin-top: 5px; }
+    .balance-box h2 {
+      font-weight: 500;
+      font-size: 18px;
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+    .balance-box p {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+    }
 
     .actions {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
+      gap: 18px;
       margin-bottom: 30px;
     }
+
     .action {
       background: white;
-      border-radius: 12px;
+      padding: 18px 0;
+      border-radius: 14px;
       text-align: center;
-      padding: 14px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-      font-size: 13px;
-      font-weight: 500;
-      transition: 0.2s;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.25s ease;
     }
-    .action:hover { background: #f0e8ff; }
+    .action:hover {
+      background-color: #f3e5f5;
+    }
     .action span {
+      font-size: 28px;
       display: block;
-      font-size: 22px;
       margin-bottom: 6px;
+      color: #7b1fa2;
+    }
+    .action p {
+      font-size: 13px;
+      font-weight: 600;
+      color: #512da8;
+    }
+
+    h3 {
+      margin-bottom: 12px;
+      font-weight: 600;
+      color: #555;
+      border-bottom: 2px solid #ddd;
+      padding-bottom: 8px;
     }
 
     table {
       width: 100%;
       background: white;
       border-collapse: collapse;
-      margin-top: 10px;
-      border-radius: 12px;
+      border-radius: 14px;
       overflow: hidden;
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
@@ -66,21 +103,36 @@
       padding: 12px 10px;
       text-align: left;
       border-bottom: 1px solid #eee;
+      font-size: 14px;
+      color: #444;
     }
     th {
       background-color: #ede7f6;
       font-weight: 600;
     }
-    .credit { color: green; font-weight: bold; }
-    .debit { color: red; font-weight: bold; }
+    .credit {
+      color: green;
+      font-weight: 700;
+    }
+    .debit {
+      color: red;
+      font-weight: 700;
+    }
     .no-transactions {
       text-align: center;
-      padding: 16px;
-      color: gray;
+      padding: 20px 0;
+      color: #999;
+      font-style: italic;
     }
 
-    @media (max-width: 600px) {
-      .actions { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 480px) {
+      .actions {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+      .balance-box p {
+        font-size: 28px;
+      }
     }
   </style>
 </head>
@@ -88,17 +140,31 @@
 
   <header>My eWallet</header>
 
-  <!-- Balance Display -->
-  <div class="balance">
+  <div class="balance-box" id="balanceBox">
     <h2>Wallet Balance</h2>
     <p>Rs. <span id="walletBalance">0.00</span></p>
   </div>
 
-  <!-- Wallet Actions -->
-  <div class="actions" id="walletActions"></div>
+  <div class="actions">
+    <div class="action" onclick="location.href='send.html'">
+      <span>💸</span>
+      <p>Send</p>
+    </div>
+    <div class="action" onclick="location.href='request.html'">
+      <span>📥</span>
+      <p>Request</p>
+    </div>
+    <div class="action" onclick="location.href='topup.html'">
+      <span>🔋</span>
+      <p>Top-Up</p>
+    </div>
+    <div class="action" onclick="location.href='qrscan.html'">
+      <span>📷</span>
+      <p>QR Scan</p>
+    </div>
+  </div>
 
-  <!-- Transactions -->
-  <h3 style="margin-bottom: 8px;">📜 Recent Transactions</h3>
+  <h3>Recent Transactions</h3>
   <table>
     <thead>
       <tr>
@@ -108,59 +174,41 @@
         <th>Amount (Rs)</th>
       </tr>
     </thead>
-    <tbody id="walletBody"></tbody>
+    <tbody id="transactionsBody">
+      <tr><td colspan="4" class="no-transactions">Loading transactions...</td></tr>
+    </tbody>
   </table>
 
   <script>
-    // Check and get current user email
-    const email = localStorage.getItem("currentUserEmail");
-    if (!email) {
-      alert("You are not logged in.");
-      window.location.href = "login.html";
-    }
+    // Assuming you have current user email stored (update accordingly)
+    const email = localStorage.getItem("currentUserEmail") || "defaultUser";
+    const userKey = `userProfile_${email}`;
+    const profile = JSON.parse(localStorage.getItem(userKey)) || { wallet: 0 };
+    const walletBalanceSpan = document.getElementById("walletBalance");
+    const transactionsBody = document.getElementById("transactionsBody");
 
-    // Load user profile and balance
-    const profileKey = `userProfile_${email}`;
-    const profile = JSON.parse(localStorage.getItem(profileKey)) || { balance: 0 };
-    const balance = parseFloat(profile.balance || 0);
-    document.getElementById("walletBalance").textContent = balance.toFixed(2);
+    // Update wallet balance
+    walletBalanceSpan.textContent = parseFloat(profile.wallet).toFixed(2);
 
-    // Show Wallet Action Buttons if balance available
-    const walletActions = document.getElementById("walletActions");
-    if (balance > 0) {
-      walletActions.innerHTML = `
-        <div class="action"><span>💸</span><a href="send.html">Send</a></div>
-        <div class="action"><span>📥</span><a href="request.html">Request</a></div>
-        <div class="action"><span>🔋</span><a href="topup.html">Top-Up</a></div>
-        <div class="action"><span>📷</span><a href="qrscan.html">QR Scan</a></div>
-      `;
-    } else {
-      walletActions.innerHTML = `
-        <div style="grid-column: span 4; text-align:center; color:red; font-weight:600;">
-          ❌ Insufficient Balance to use Wallet
-        </div>
-      `;
-    }
-
-    // Load user-specific transaction history
+    // Load wallet transactions
     const txKey = `walletTransactions_${email}`;
     const transactions = JSON.parse(localStorage.getItem(txKey)) || [];
-    const walletBody = document.getElementById("walletBody");
 
     if (transactions.length === 0) {
-      walletBody.innerHTML = `<tr><td colspan="4" class="no-transactions">No wallet transactions found.</td></tr>`;
+      transactionsBody.innerHTML = `<tr><td colspan="4" class="no-transactions">No transactions found.</td></tr>`;
     } else {
-      transactions.forEach(tx => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${tx.date || new Date().toLocaleDateString()}</td>
+      transactionsBody.innerHTML = "";
+      transactions.slice().reverse().forEach(tx => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${tx.date || "-"}</td>
           <td>${tx.type}</td>
-          <td>${tx.toFrom}</td>
-          <td class="${tx.type === 'Credit' ? 'credit' : 'debit'}">
-            ${tx.type === 'Credit' ? '+' : '-'}${parseFloat(tx.amount).toFixed(2)}
+          <td>${tx.toFrom || "-"}</td>
+          <td class="${tx.type.toLowerCase() === 'credit' ? 'credit' : 'debit'}">
+            ${tx.type.toLowerCase() === 'credit' ? '+' : '-'}${parseFloat(tx.amount).toFixed(2)}
           </td>
         `;
-        walletBody.appendChild(row);
+        transactionsBody.appendChild(tr);
       });
     }
   </script>
