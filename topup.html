@@ -82,7 +82,7 @@
     </select>
 
     <label for="number">Phone Number</label>
-    <input type="text" id="number" pattern="98\d{8}" placeholder="98XXXXXXXX" required />
+    <input type="text" id="number" pattern="98\\d{8}" placeholder="98XXXXXXXX" required />
 
     <label for="amount">Amount (Rs)</label>
     <input type="number" id="amount" required min="10" />
@@ -91,11 +91,19 @@
   </form>
 
   <script>
-    const profile = JSON.parse(localStorage.getItem("userProfile")) || { wallet: 0 };
+    const email = localStorage.getItem("currentUserEmail");
+    if (!email) {
+      alert("Not logged in");
+      window.location.href = "login.html";
+    }
+
+    const profileKey = `userProfile_${email}`;
+    let profile = JSON.parse(localStorage.getItem(profileKey)) || { balance: 0 };
     const walletBalance = document.getElementById("walletBalance");
     const messageBox = document.getElementById("messageBox");
 
-    walletBalance.textContent = parseFloat(profile.wallet).toFixed(2);
+    // Show wallet balance
+    walletBalance.textContent = parseFloat(profile.balance || 0).toFixed(2);
 
     document.getElementById("topupForm").addEventListener("submit", function(e) {
       e.preventDefault();
@@ -104,25 +112,28 @@
       const number = document.getElementById("number").value.trim();
       const amount = parseFloat(document.getElementById("amount").value);
 
+      messageBox.textContent = "";
+      messageBox.className = "message";
+
       // Validation
       if (!operator || !number || isNaN(amount) || amount < 10) {
         messageBox.textContent = "Please fill all fields correctly.";
-        messageBox.className = "message";
         return;
       }
 
-      if (profile.wallet < amount) {
-        messageBox.textContent = `❌ Insufficient balance. You have Rs ${profile.wallet.toFixed(2)}.`;
-        messageBox.className = "message";
+      if (profile.balance < amount) {
+        messageBox.textContent = `❌ Insufficient balance. You have Rs ${profile.balance.toFixed(2)}.`;
         return;
       }
 
       // Deduct and save
-      profile.wallet -= amount;
-      localStorage.setItem("userProfile", JSON.stringify(profile));
+      profile.balance -= amount;
+      localStorage.setItem(profileKey, JSON.stringify(profile));
+      walletBalance.textContent = profile.balance.toFixed(2);
 
       // Save transaction
-      const transactions = JSON.parse(localStorage.getItem("walletTransactions")) || [];
+      const txKey = `walletTransactions_${email}`;
+      const transactions = JSON.parse(localStorage.getItem(txKey)) || [];
       transactions.push({
         date: new Date().toLocaleDateString(),
         type: "Debit",
@@ -130,16 +141,12 @@
         toFrom: number,
         amount: amount
       });
-      localStorage.setItem("walletTransactions", JSON.stringify(transactions));
+      localStorage.setItem(txKey, JSON.stringify(transactions));
 
-      // Show success
+      // Success message
       messageBox.textContent = `✅ Recharged Rs ${amount.toFixed(2)} to ${number} (${operator})`;
-      messageBox.className = "message success";
+      messageBox.classList.add("success");
 
-      // Update balance
-      walletBalance.textContent = profile.wallet.toFixed(2);
-
-      // Reset form
       e.target.reset();
     });
   </script>
