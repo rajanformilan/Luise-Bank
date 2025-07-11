@@ -53,6 +53,13 @@
       margin-top: 10px;
     }
 
+    #welcomeText {
+      margin-top: 8px;
+      font-size: 14px;
+      font-weight: 400;
+      color: #e0dfff;
+    }
+
     .cards {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -144,6 +151,7 @@
     <div class="balance-box">
       <h3>Total Balance</h3>
       <p>Rs. <span id="dashboardBalance">0.00</span></p>
+      <p id="welcomeText">Welcome, <span id="dashboardName">User</span></p>
     </div>
 
     <!-- Summary Cards -->
@@ -181,8 +189,16 @@
   </div>
 
   <script>
-    const profile = JSON.parse(localStorage.getItem("userProfile")) || { balance: 0 };
-    document.getElementById("dashboardBalance").textContent = parseFloat(profile.balance).toFixed(2);
+    const profile = JSON.parse(localStorage.getItem("userProfile")) || {};
+    const balance = parseFloat(profile.balance);
+
+    if (!isNaN(balance)) {
+      document.getElementById("dashboardBalance").textContent = balance.toFixed(2);
+    } else {
+      document.getElementById("dashboardBalance").textContent = "0.00";
+    }
+
+    document.getElementById("dashboardName").textContent = profile.name || "User";
   </script>
 
 </body>
