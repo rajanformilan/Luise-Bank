@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Luise Mobile Banking - Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+  <title>Luise Mobile Banking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet" />
   <style>
     * {
       box-sizing: border-box;
@@ -26,12 +26,16 @@
       font-size: 20px;
       font-weight: 600;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      user-select: none;
     }
 
     .dashboard {
       padding: 20px;
+      max-width: 480px;
+      margin: auto;
     }
 
+    /* Balance Card */
     .balance-box {
       background: linear-gradient(to right, #673ab7, #512da8);
       color: white;
@@ -48,11 +52,13 @@
     }
 
     .balance-box p {
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 600;
       margin-top: 10px;
+      letter-spacing: 0.5px;
     }
 
+    /* Summary Cards */
     .cards {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -66,11 +72,14 @@
       padding: 20px;
       text-align: center;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      transition: 0.3s ease;
+      transition: transform 0.3s ease;
+      cursor: default;
+      user-select: none;
     }
 
     .card:hover {
       transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
     }
 
     .card h4 {
@@ -82,8 +91,10 @@
     .card p {
       font-size: 18px;
       font-weight: 600;
+      color: #333;
     }
 
+    /* Quick Actions Menu */
     .menu {
       background: white;
       padding: 16px;
@@ -95,6 +106,7 @@
       margin-bottom: 10px;
       font-size: 16px;
       color: #333;
+      user-select: none;
     }
 
     .menu-grid {
@@ -110,7 +122,9 @@
       text-align: center;
       font-size: 13px;
       font-weight: 500;
-      transition: 0.2s;
+      transition: background-color 0.2s ease;
+      cursor: pointer;
+      user-select: none;
     }
 
     .menu-item:hover {
@@ -121,6 +135,16 @@
       display: block;
       font-size: 22px;
       margin-bottom: 5px;
+    }
+
+    .menu-item a {
+      color: #512da8;
+      text-decoration: none;
+      display: block;
+    }
+
+    .menu-item a:hover {
+      text-decoration: underline;
     }
 
     @media (max-width: 600px) {
@@ -141,52 +165,74 @@
   <div class="dashboard">
 
     <!-- Balance Card -->
-    <div class="balance-box">
+    <div class="balance-box" aria-label="Total balance card">
       <h3>Total Balance</h3>
       <p>Rs. <span id="dashboardBalance">0.00</span></p>
     </div>
 
     <!-- Summary Cards -->
     <div class="cards">
-      <div class="card">
+      <div class="card" aria-label="Transactions this month">
         <h4>Transactions</h4>
-        <p>25 this month</p>
+        <p id="transactionCount">0 this month</p>
       </div>
-      <div class="card">
+      <div class="card" aria-label="Unread notifications">
         <h4>Unread Notifications</h4>
-        <p>3 messages</p>
+        <p id="notificationCount">0 messages</p>
       </div>
     </div>
 
     <!-- Quick Actions Menu -->
-    <div class="menu">
+    <div class="menu" aria-label="Quick actions menu">
       <h3>Quick Actions</h3>
       <div class="menu-grid">
-        <div class="menu-item"><span>🏠</span><a href="index.html">Home</a></div>
-        <div class="menu-item"><span>👤</span><a href="profile.html">Profile</a></div>
-        <div class="menu-item"><span>🏦</span><a href="ewallet.html">eWallet</a></div>
-        <div class="menu-item"><span>💰</span><a href="balance.html">Balance</a></div>
-        <div class="menu-item"><span>📥</span><a href="top-up.html">Top-Up</a></div>
-        <div class="menu-item"><span>💸</span><a href="send.html">Send Money</a></div>
-        <div class="menu-item"><span>📜</span><a href="transactions.html">Transactions</a></div>
-        <div class="menu-item"><span>🚪</span><a href="logout.html">Logout</a></div>
+        <div class="menu-item" tabindex="0"><span>🏠</span><a href="index.html">Home</a></div>
+<div class="menu-item" tabindex="0"><span></span><a href="authentication.html">Signup/Login</a></div>
+        <div class="menu-item" tabindex="0"><span>👤</span><a href="profile.html">Profile</a></div>
+        <div class="menu-item" tabindex="0"><span>🏦</span><a href="ewallet.html">eWallet</a></div>
+        <div class="menu-item" tabindex="0"><span>🔢</span><a href="acnumber.html">Account Number</a></div>
+        <div class="menu-item" tabindex="0"><span>💰</span><a href="balance.html">Balance</a></div>
+        <div class="menu-item" tabindex="0"><span>📥</span><a href="deposit.html">Deposit</a></div>
+        <div class="menu-item" tabindex="0"><span>💡</span><a href="paybills.html">Pay Bills</a></div>
+        <div class="menu-item" tabindex="0"><span>📝</span><a href="loans.html">Apply Loan</a></div>
+        <div class="menu-item" tabindex="0"><span>💸</span><a href="transfer.html">Transfer</a></div>
+        <div class="menu-item" tabindex="0"><span>💳</span><a href="applycards.html">Apply Card</a></div>
+        <div class="menu-item" tabindex="0"><span>📜</span><a href="transactions.html">History</a></div>
+        <div class="menu-item" tabindex="0"><span>🔐</span><a href="admin-login.html">Only Admins</a></div>
+        <div class="menu-item" tabindex="0"><span>🚪</span><a href="authentication.html">Logout</a></div>
       </div>
     </div>
 
   </div>
 
   <script>
-    // Get current user
-    const email = localStorage.getItem("currentUserEmail");
-    if (!email) {
-      alert("You're not logged in!");
-      window.location.href = "login.html";
-    }
+    // Fetch user profile from localStorage
+    const profile = JSON.parse(localStorage.getItem("userProfile")) || { balance: 0 };
 
-    const profileKey = `userProfile_${email}`;
-    const profile = JSON.parse(localStorage.getItem(profileKey)) || { balance: 0 };
-
+    // Update dashboard balance
     document.getElementById("dashboardBalance").textContent = parseFloat(profile.balance || 0).toFixed(2);
+
+    // Load transactions for this month from localStorage
+    const email = profile.email || "defaultUser";
+    const txKey = `walletTransactions_${email}`;
+    const transactions = JSON.parse(localStorage.getItem(txKey)) || [];
+
+    // Count transactions this month
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
+
+    const transactionsThisMonth = transactions.filter(tx => {
+      if (!tx.date) return false;
+      const txDate = new Date(tx.date);
+      return txDate.getFullYear() === currentYear && txDate.getMonth() === currentMonth;
+    });
+
+    document.getElementById("transactionCount").textContent = `${transactionsThisMonth.length} this month`;
+
+    // For demonstration, show dummy unread notifications count or from localStorage if you want
+    const unreadNotifications = parseInt(localStorage.getItem("unreadNotifications")) || 3;
+    document.getElementById("notificationCount").textContent = `${unreadNotifications} messages`;
   </script>
 
 </body>
