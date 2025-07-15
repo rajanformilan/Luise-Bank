@@ -152,7 +152,7 @@
   let monthKey = `lastMonth_${email}`;
   let lastMonth = localStorage.getItem(monthKey);
   let selectedPlan = profile.plan;
-  let balance = parseFloat(profile.balance) || 0;
+  let balance = parseFloat(profile.balance) || 500;
 
   const usernameDisplay = document.getElementById("username");
   const emailDisplay = document.getElementById("email");
