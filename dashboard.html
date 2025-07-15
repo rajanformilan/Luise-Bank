@@ -167,7 +167,7 @@
     <!-- Balance Card -->
     <div class="balance-box" aria-label="Total balance card">
       <h3>Total Balance</h3>
-      <p>Rs. <span id="dashboardBalance">0.00</span></p>
+      <p>Rs. <span id="dashboardBalance">500.00</span></p>
     </div>
 
     <!-- Summary Cards -->
@@ -206,10 +206,10 @@
 
   <script>
     // Fetch user profile from localStorage
-    const profile = JSON.parse(localStorage.getItem("userProfile")) || { balance: 0 };
+    const profile = JSON.parse(localStorage.getItem("userProfile")) || { balance: 500 };
 
     // Update dashboard balance
-    document.getElementById("dashboardBalance").textContent = parseFloat(profile.balance || 0).toFixed(2);
+    document.getElementById("dashboardBalance").textContent = parseFloat(profile.balance || 500).toFixed(2);
 
     // Load transactions for this month from localStorage
     const email = profile.email || "defaultUser";
