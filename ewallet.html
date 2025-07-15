@@ -183,7 +183,7 @@
     // Assuming you have current user email stored (update accordingly)
     const email = localStorage.getItem("currentUserEmail") || "defaultUser";
     const userKey = `userProfile_${email}`;
-    const profile = JSON.parse(localStorage.getItem(userKey)) || { wallet: 0 };
+    const profile = JSON.parse(localStorage.getItem(userKey)) || { wallet: 500 };
     const walletBalanceSpan = document.getElementById("walletBalance");
     const transactionsBody = document.getElementById("transactionsBody");
 
