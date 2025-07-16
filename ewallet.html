@@ -180,17 +180,20 @@
   </table>
 
   <script>
-    // Assuming you have current user email stored (update accordingly)
-    const email = localStorage.getItem("currentUserEmail") || "defaultUser";
+    // Get current user email or fallback
+    const email = localStorage.getItem("currentUserEmail") || "demo@luisebank.com";
     const userKey = `userProfile_${email}`;
-    const profile = JSON.parse(localStorage.getItem(userKey)) || { wallet: 500 };
-    const walletBalanceSpan = document.getElementById("walletBalance");
-    const transactionsBody = document.getElementById("transactionsBody");
+    let profile = JSON.parse(localStorage.getItem(userKey));
 
-    // Update wallet balance
+    if (!profile || isNaN(profile.wallet)) {
+      profile = { wallet: 500 }; // default
+      localStorage.setItem(userKey, JSON.stringify(profile));
+    }
+
+    const walletBalanceSpan = document.getElementById("walletBalance");
     walletBalanceSpan.textContent = parseFloat(profile.wallet).toFixed(2);
 
-    // Load wallet transactions
+    const transactionsBody = document.getElementById("transactionsBody");
     const txKey = `walletTransactions_${email}`;
     const transactions = JSON.parse(localStorage.getItem(txKey)) || [];
 
